@@ -10,7 +10,6 @@ export default function HomePage() {
   const [showRules, setShowRules] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const [hostName, setHostName] = useState('');
   const [roomName, setRoomName] = useState('');
   const [maxPlayers, setMaxPlayers] = useState(8);
@@ -43,69 +42,59 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4">
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
       {/* Background */}
-      <div className="fixed inset-0 z-0">
-        <img src="/bunker-bg.jpg" alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/70"></div>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+        <img src="/bunker-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div className="overlay"></div>
       </div>
 
       {/* Rules Modal */}
       {showRules && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl" onClick={() => setShowRules(false)}>
-          <div className="glass rounded-3xl p-12 max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <h1 className="text-5xl font-black text-center mb-10">ПРАВИЛА ИГРЫ</h1>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(20px)' }} onClick={() => setShowRules(false)}>
+          <div className="glass" style={{ borderRadius: '24px', padding: '60px 50px', maxWidth: '900px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+            <h1 style={{ fontSize: '48px', fontWeight: 900, textAlign: 'center', marginBottom: '40px' }}>ПРАВИЛА ИГРЫ</h1>
             
-            <div className="space-y-8 text-gray-300">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', color: '#ccc', fontSize: '16px', lineHeight: '1.7' }}>
               <section>
-                <h2 className="text-3xl font-bold text-white mb-4">Сюжет</h2>
-                <p className="text-lg leading-relaxed">Произошла глобальная катастрофа. Человечество на грани вымирания. Есть бункер, но мест ограничено. Вы должны убедить других, что достойны выжить.</p>
+                <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '15px' }}>Сюжет</h2>
+                <p>Произошла глобальная катастрофа. Человечество на грани вымирания. Есть бункер, но мест ограничено. Вы должны убедить других, что достойны выжить.</p>
               </section>
 
               <section>
-                <h2 className="text-3xl font-bold text-white mb-4">Характеристики</h2>
-                <p className="text-lg mb-4">Каждый игрок получает 8 случайных характеристик:</p>
-                <div className="grid grid-cols-2 gap-3 text-base">
-                  <div className="glass-light rounded-xl p-4">Профессия</div>
-                  <div className="glass-light rounded-xl p-4">Здоровье</div>
-                  <div className="glass-light rounded-xl p-4">Хобби</div>
-                  <div className="glass-light rounded-xl p-4">Багаж</div>
-                  <div className="glass-light rounded-xl p-4">Фобия</div>
-                  <div className="glass-light rounded-xl p-4">Навык</div>
-                  <div className="glass-light rounded-xl p-4">Биология</div>
-                  <div className="glass-light rounded-xl p-4">Доп. факт</div>
+                <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '15px' }}>Характеристики</h2>
+                <p style={{ marginBottom: '15px' }}>Каждый игрок получает 8 случайных характеристик:</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', fontSize: '14px' }}>
+                  {['Профессия', 'Здоровье', 'Хобби', 'Багаж', 'Фобия', 'Навык', 'Биология', 'Доп. факт'].map((item, i) => (
+                    <div key={i} className="glass-light" style={{ padding: '15px', borderRadius: '10px', textAlign: 'center' }}>{item}</div>
+                  ))}
                 </div>
               </section>
 
               <section>
-                <h2 className="text-3xl font-bold text-white mb-4">Как играть</h2>
-                <div className="space-y-4">
-                  <div className="glass-light rounded-xl p-5">
-                    <h3 className="font-bold text-xl text-white mb-2">1. Обсуждение</h3>
-                    <p>Ведущий даёт время. Игроки рассказывают о себе.</p>
-                  </div>
-                  <div className="glass-light rounded-xl p-5">
-                    <h3 className="font-bold text-xl text-white mb-2">2. Раскрытие</h3>
-                    <p>Минимум: 1 профессия + 2 характеристики за раунд.</p>
-                  </div>
-                  <div className="glass-light rounded-xl p-5">
-                    <h3 className="font-bold text-xl text-white mb-2">3. Аргументация</h3>
-                    <p>Объясните, почему вы ценны для бункера.</p>
-                  </div>
-                  <div className="glass-light rounded-xl p-5">
-                    <h3 className="font-bold text-xl text-white mb-2">4. Голосование</h3>
-                    <p>Все голосуют за исключение одного игрока.</p>
-                  </div>
+                <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '15px' }}>Как играть</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  {[
+                    { title: '1. Обсуждение', text: 'Ведущий даёт время. Игроки рассказывают о себе.' },
+                    { title: '2. Раскрытие', text: 'Минимум: 1 профессия + 2 характеристики за раунд.' },
+                    { title: '3. Аргументация', text: 'Объясните, почему вы ценны для бункера.' },
+                    { title: '4. Голосование', text: 'Все голосуют за исключение одного игрока.' }
+                  ].map((step, i) => (
+                    <div key={i} className="glass-light" style={{ padding: '20px', borderRadius: '12px' }}>
+                      <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>{step.title}</h3>
+                      <p style={{ fontSize: '14px', color: '#aaa' }}>{step.text}</p>
+                    </div>
+                  ))}
                 </div>
               </section>
 
               <section>
-                <h2 className="text-3xl font-bold text-white mb-4">Победа</h2>
-                <p className="text-lg leading-relaxed">Игра продолжается, пока количество выживших не сравняется с количеством мест в бункере.</p>
+                <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#fff', marginBottom: '15px' }}>Победа</h2>
+                <p>Игра продолжается, пока количество выживших не сравняется с количеством мест в бункере.</p>
               </section>
             </div>
 
-            <button onClick={() => setShowRules(false)} className="btn btn-accent w-full mt-10 text-xl py-5">
+            <button onClick={() => setShowRules(false)} className="btn btn-accent" style={{ width: '100%', marginTop: '40px', fontSize: '18px', padding: '18px 32px' }}>
               Закрыть
             </button>
           </div>
@@ -113,58 +102,58 @@ export default function HomePage() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-md fade-in">
+      <div className="content-layer fade-in" style={{ width: '100%', maxWidth: '480px' }}>
         {view === 'main' && (
           <>
-            <div className="text-center mb-12">
-              <BunkerIcon className="w-24 h-24 text-yellow-500 mx-auto mb-8" />
-              <h1 className="text-7xl font-black mb-4">БУНКЕР</h1>
-              <p className="text-gray-400 uppercase tracking-widest">Онлайн игра на выживание</p>
+            <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+              <BunkerIcon style={{ width: '100px', height: '100px', color: '#d4af37', margin: '0 auto 30px' }} />
+              <h1 style={{ fontSize: '72px', fontWeight: 900, marginBottom: '15px', lineHeight: 1 }}>БУНКЕР</h1>
+              <p style={{ color: '#888', fontSize: '12px', letterSpacing: '0.3em', textTransform: 'uppercase' }}>Онлайн игра на выживание</p>
             </div>
 
-            <div className="space-y-4">
-              <button onClick={() => setView('create')} disabled={!connected} className="btn btn-accent w-full text-xl py-6">
-                <PlayIcon className="w-6 h-6" />
-                Создать комнату
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <button onClick={() => setView('create')} disabled={!connected} className="btn btn-accent" style={{ width: '100%', fontSize: '18px', padding: '20px 32px' }}>
+                <PlayIcon style={{ width: '24px', height: '24px' }} />
+                <span>Создать комнату</span>
               </button>
               
-              <button onClick={() => setView('join')} disabled={!connected} className="btn btn-primary w-full text-xl py-6">
-                <ArrowRightIcon className="w-6 h-6" />
-                Войти в комнату
+              <button onClick={() => setView('join')} disabled={!connected} className="btn btn-primary" style={{ width: '100%', fontSize: '18px', padding: '20px 32px' }}>
+                <ArrowRightIcon style={{ width: '24px', height: '24px' }} />
+                <span>Войти в комнату</span>
               </button>
 
-              <button onClick={() => setShowRules(true)} className="w-full text-gray-500 hover:text-yellow-500 py-4 transition text-sm tracking-widest">
+              <button onClick={() => setShowRules(true)} style={{ width: '100%', padding: '16px', background: 'none', border: 'none', color: '#666', cursor: 'pointer', fontSize: '13px', letterSpacing: '0.2em', transition: 'color 0.3s' }} onMouseEnter={e => e.currentTarget.style.color = '#d4af37'} onMouseLeave={e => e.currentTarget.style.color = '#666'}>
                 ПРАВИЛА ИГРЫ
               </button>
 
-              {!connected && <p className="text-center text-red-400 text-sm mt-4">Подключение к серверу...</p>}
+              {!connected && <p style={{ textAlign: 'center', color: '#e74c3c', fontSize: '14px', marginTop: '15px' }}>Подключение к серверу...</p>}
             </div>
           </>
         )}
 
         {view === 'create' && (
-          <div className="glass rounded-3xl p-8">
-            <button onClick={() => setView('main')} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2">
-              <ArrowRightIcon className="w-4 h-4 rotate-180" />
-              Назад
+          <div className="glass" style={{ borderRadius: '24px', padding: '35px' }}>
+            <button onClick={() => setView('main')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: '#888', cursor: 'pointer', marginBottom: '25px', padding: '5px 0', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = '#888'}>
+              <ArrowRightIcon style={{ width: '16px', height: '16px', transform: 'rotate(180deg)' }} />
+              <span>Назад</span>
             </button>
 
-            <h2 className="text-3xl font-bold mb-8">Создать комнату</h2>
+            <h2 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '30px' }}>Создать комнату</h2>
 
-            <form onSubmit={handleCreate} className="space-y-6">
+            <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <label className="block text-gray-400 mb-2 text-sm">Ваше имя</label>
-                <input value={hostName} onChange={e => setHostName(e.target.value)} placeholder="Ведущий" className="input text-lg" maxLength={30} autoFocus />
+                <label style={{ display: 'block', color: '#aaa', fontSize: '13px', marginBottom: '8px' }}>Ваше имя</label>
+                <input value={hostName} onChange={e => setHostName(e.target.value)} placeholder="Ведущий" className="input" style={{ fontSize: '16px' }} maxLength={30} autoFocus />
               </div>
 
               <div>
-                <label className="block text-gray-400 mb-2 text-sm">Название комнаты</label>
+                <label style={{ display: 'block', color: '#aaa', fontSize: '13px', marginBottom: '8px' }}>Название комнаты</label>
                 <input value={roomName} onChange={e => setRoomName(e.target.value)} placeholder="Моя комната" className="input" maxLength={40} />
               </div>
 
               <div>
-                <label className="block text-gray-400 mb-2 text-sm">Количество игроков</label>
-                <select value={maxPlayers} onChange={e => setMaxPlayers(Number(e.target.value))} className="input text-lg">
+                <label style={{ display: 'block', color: '#aaa', fontSize: '13px', marginBottom: '8px' }}>Количество игроков</label>
+                <select value={maxPlayers} onChange={e => setMaxPlayers(Number(e.target.value))} className="input" style={{ fontSize: '16px' }}>
                   <option value={4}>4 игрока</option>
                   <option value={6}>6 игроков</option>
                   <option value={8}>8 игроков</option>
@@ -173,14 +162,20 @@ export default function HomePage() {
                 </select>
               </div>
 
-              <div className="glass-light rounded-xl p-4 space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-gray-400">Мест в бункере:</span><span className="text-yellow-500 font-bold">30-50% (случайно)</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">Катастрофа:</span><span className="text-yellow-500 font-bold">Случайно</span></div>
+              <div className="glass-light" style={{ padding: '18px', borderRadius: '12px', fontSize: '14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ color: '#aaa' }}>Мест в бункере:</span>
+                  <span style={{ color: '#d4af37', fontWeight: 700 }}>30-50% (случайно)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#aaa' }}>Катастрофа:</span>
+                  <span style={{ color: '#d4af37', fontWeight: 700 }}>Случайно</span>
+                </div>
               </div>
 
-              {error && <div className="glass-light rounded-xl p-4 text-red-400 text-sm border border-red-500/20">{error}</div>}
+              {error && <div className="glass-light" style={{ padding: '15px', borderRadius: '10px', color: '#e74c3c', fontSize: '14px', border: '1px solid rgba(231, 76, 60, 0.2)' }}>{error}</div>}
 
-              <button type="submit" disabled={loading || !connected} className="btn btn-accent w-full text-lg py-5">
+              <button type="submit" disabled={loading || !connected} className="btn btn-accent" style={{ width: '100%', fontSize: '17px', padding: '18px 32px' }}>
                 {loading ? 'Создание...' : 'Создать'}
               </button>
             </form>
@@ -188,28 +183,28 @@ export default function HomePage() {
         )}
 
         {view === 'join' && (
-          <div className="glass rounded-3xl p-8">
-            <button onClick={() => setView('main')} className="text-gray-400 hover:text-white mb-6 flex items-center gap-2">
-              <ArrowRightIcon className="w-4 h-4 rotate-180" />
-              Назад
+          <div className="glass" style={{ borderRadius: '24px', padding: '35px' }}>
+            <button onClick={() => setView('main')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: '#888', cursor: 'pointer', marginBottom: '25px', padding: '5px 0', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = '#888'}>
+              <ArrowRightIcon style={{ width: '16px', height: '16px', transform: 'rotate(180deg)' }} />
+              <span>Назад</span>
             </button>
 
-            <h2 className="text-3xl font-bold mb-8">Войти в комнату</h2>
+            <h2 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '30px' }}>Войти в комнату</h2>
 
-            <form onSubmit={handleJoin} className="space-y-6">
+            <form onSubmit={handleJoin} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <label className="block text-gray-400 mb-2 text-sm">Код комнаты</label>
-                <input value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())} placeholder="ABC123" className="input text-3xl text-center tracking-[0.3em] font-bold" maxLength={6} autoFocus />
+                <label style={{ display: 'block', color: '#aaa', fontSize: '13px', marginBottom: '8px' }}>Код комнаты</label>
+                <input value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())} placeholder="ABC123" className="input" style={{ fontSize: '32px', textAlign: 'center', letterSpacing: '0.3em', fontWeight: 700 }} maxLength={6} autoFocus />
               </div>
 
               <div>
-                <label className="block text-gray-400 mb-2 text-sm">Ваше имя</label>
-                <input value={joinName} onChange={e => setJoinName(e.target.value)} placeholder="Игрок" className="input text-lg" maxLength={30} />
+                <label style={{ display: 'block', color: '#aaa', fontSize: '13px', marginBottom: '8px' }}>Ваше имя</label>
+                <input value={joinName} onChange={e => setJoinName(e.target.value)} placeholder="Игрок" className="input" style={{ fontSize: '16px' }} maxLength={30} />
               </div>
 
-              {error && <div className="glass-light rounded-xl p-4 text-red-400 text-sm border border-red-500/20">{error}</div>}
+              {error && <div className="glass-light" style={{ padding: '15px', borderRadius: '10px', color: '#e74c3c', fontSize: '14px', border: '1px solid rgba(231, 76, 60, 0.2)' }}>{error}</div>}
 
-              <button type="submit" disabled={loading || !connected} className="btn btn-accent w-full text-lg py-5">
+              <button type="submit" disabled={loading || !connected} className="btn btn-accent" style={{ width: '100%', fontSize: '17px', padding: '18px 32px' }}>
                 {loading ? 'Вход...' : 'Войти'}
               </button>
             </form>

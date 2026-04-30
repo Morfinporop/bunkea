@@ -6,7 +6,6 @@ import GameScreen from '../components/game/GameScreen';
 import VotingScreen from '../components/game/VotingScreen';
 import ResultsScreen from '../components/game/ResultsScreen';
 import HostPanel from '../components/game/HostPanel';
-import ChatPanel from '../components/game/ChatPanel';
 
 export default function GamePage() {
   const navigate = useNavigate();
@@ -38,62 +37,46 @@ export default function GamePage() {
   };
 
   return (
-    <div className="min-h-screen relative">
-      {/* Background */}
-      <div className="fixed inset-0 z-0">
-        <img src="/bunker-bg.jpg" alt="" className="w-full h-full object-cover opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black"></div>
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
+        <img src="/bunker-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div className="overlay"></div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          {/* Header */}
-          <div className="mb-6 glass rounded-xl p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="text-sm text-gray-500">
-                  Код: <span className="text-yellow-500 font-bold">{room.code}</span>
+      <div className="content-layer" style={{ minHeight: '100vh', padding: '24px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <div className="glass" style={{ padding: '16px 24px', borderRadius: '12px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <div style={{ color: '#aaa' }}>
+                  Код: <span style={{ color: '#d4af37', fontWeight: 700 }}>{room.code}</span>
                 </div>
-                <div className="h-4 w-px bg-gray-800"></div>
-                <div className="text-sm text-gray-500">
-                  Фаза: <span className="text-white font-bold capitalize">
+                <div style={{ height: '16px', width: '1px', background: '#333' }}></div>
+                <div style={{ color: '#aaa' }}>
+                  Фаза: <span style={{ color: '#fff', fontWeight: 700 }}>
                     {room.phase === 'catastrophe' ? 'Катастрофа' :
                      room.phase === 'game' ? `Раунд ${room.round}` :
                      room.phase === 'voting' ? 'Голосование' : 'Итоги'}
                   </span>
                 </div>
               </div>
-              <div className="text-sm text-gray-500">
-                Выживших: <span className="text-white font-bold">{room.players.filter(p => !p.isEliminated).length}</span> / 
-                Мест: <span className="text-yellow-500 font-bold">{room.settings.bunkerCapacity}</span>
+              <div style={{ color: '#aaa' }}>
+                Выживших: <span style={{ color: '#fff', fontWeight: 700 }}>{room.players.filter(p => !p.isEliminated).length}</span>
+                {' / '}
+                Мест: <span style={{ color: '#d4af37', fontWeight: 700 }}>{room.settings.bunkerCapacity}</span>
               </div>
             </div>
           </div>
 
-          {/* Main Content - Vertical scroll */}
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            {/* Left: Host Panel (if host) */}
+          <div style={{ display: 'grid', gridTemplateColumns: isHost ? '300px 1fr' : '1fr', gap: '24px' }}>
             {isHost && (
-              <div className="xl:col-span-3">
-                <div className="xl:sticky xl:top-6">
-                  <HostPanel />
-                </div>
+              <div>
+                <HostPanel />
               </div>
             )}
 
-            {/* Center: Main Game */}
-            <div className={isHost ? 'xl:col-span-6' : 'xl:col-span-9'}>
-              <div className="space-y-6">
-                {renderPhase()}
-              </div>
-            </div>
-
-            {/* Right: Chat */}
-            <div className="xl:col-span-3">
-              <div className="xl:sticky xl:top-6">
-                <ChatPanel />
-              </div>
+            <div>
+              {renderPhase()}
             </div>
           </div>
         </div>

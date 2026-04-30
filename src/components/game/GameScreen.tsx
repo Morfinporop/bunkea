@@ -1,13 +1,9 @@
-/**
- * Game Screen - Simple card-based gameplay
- */
 import { useState, useEffect } from 'react';
 import { useGame } from '../../GameContext';
 import { Player, PlayerCards } from '../../types';
 import { CardIcon, TimerIcon, UserIcon, DiceIcon, CrossIcon, CheckIcon } from '../Icons';
 
 const CARD_ORDER = ['profession', 'health', 'hobby', 'luggage', 'phobia', 'skill', 'biology', 'extra'] as const;
-type CardKey = typeof CARD_ORDER[number];
 
 function Timer({ timerEndAt, timerDuration }: { timerEndAt: number | null; timerDuration: number | null }) {
   const [timeLeft, setTimeLeft] = useState(0);
@@ -32,117 +28,168 @@ function Timer({ timerEndAt, timerDuration }: { timerEndAt: number | null; timer
   const isLow = timeLeft <= 10;
 
   return (
-    <div className="card p-4 mb-4">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2 text-gray-400 text-sm">
-          <TimerIcon className="w-4 h-4" />
-          <span>Таймер</span>
+    <div className="glass" style={{ padding: '20px', borderRadius: '16px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#aaa', fontSize: '14px' }}>
+          <TimerIcon style={{ width: '20px', height: '20px' }} />
+          <span>Таймер раунда</span>
         </div>
-        <div className={`text-2xl font-black ${isLow ? 'text-red-500' : 'text-yellow-500'}`}>
+        <div style={{ fontSize: '32px', fontWeight: 900, color: isLow ? '#e74c3c' : '#d4af37' }}>
           {mins}:{String(secs).padStart(2, '0')}
         </div>
       </div>
-      <div className="h-2 bg-gray-900 rounded-full overflow-hidden">
-        <div
-          className={`h-full transition-all ${isLow ? 'bg-red-500' : 'bg-yellow-500'}`}
-          style={{ width: `${pct}%` }}
-        />
+      <div style={{ height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: isLow ? '#e74c3c' : '#d4af37', transition: 'width 0.3s' }} />
       </div>
     </div>
   );
 }
 
-function PlayerCard({ player, isMe, isHost }: { player: Player; isMe: boolean; isHost: boolean }) {
-  const { revealCard, revealAllCards, eliminatePlayer, restorePlayer, reassignCards, playerRevealCard } = useGame();
+function MyCards({ player }: { player: Player }) {
+  const { playerRevealCard } = useGame();
+  const cards = player.cards;
+  if (!cards) return null;
+
+  return (
+    <div className="glass" style={{ padding: '25px', borderRadius: '16px', marginBottom: '30px' }}>
+      <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '20px', color: '#d4af37' }}>
+        МОИ ХАРАКТЕРИСТИКИ
+      </h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '15px' }}>
+        {CARD_ORDER.map((cardKey) => {
+          const card = (cards as PlayerCards)[cardKey];
+          const isRevealed = card.revealed;
+
+          return (
+            <div key={cardKey} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className={isRevealed ? 'card-gold' : 'card'} style={{ padding: '16px', borderRadius: '12px', minHeight: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                  <CardIcon style={{ width: '16px', height: '16px', color: '#888' }} />
+                  <div style={{ fontSize: '12px', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    {card.label}
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '16px', fontWeight: 600, color: '#fff', lineHeight: '1.3' }}>
+                  {card.value}
+                </div>
+
+                {isRevealed && (
+                  <div style={{ fontSize: '11px', color: '#d4af37', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <CheckIcon style={{ width: '12px', height: '12px' }} />
+                    <span>Раскрыто всем</span>
+                  </div>
+                )}
+              </div>
+
+              {!isRevealed && (
+                <button
+                  onClick={() => playerRevealCard(cardKey)}
+                  className="btn btn-primary"
+                  style={{ width: '100%', padding: '10px 16px', fontSize: '13px' }}
+                >
+                  Раскрыть всем
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function OtherPlayerCard({ player, isHost }: { player: Player; isHost: boolean }) {
+  const { revealCard, revealAllCards, eliminatePlayer, restorePlayer, reassignCards } = useGame();
   const cards = player.cards;
   if (!cards) return null;
 
   const revealedCount = Object.values(cards).filter(c => c.revealed).length;
 
-  const handleRevealCard = (cardKey: string) => {
-    if (isHost) {
-      revealCard(player.id, cardKey);
-    } else if (isMe) {
-      playerRevealCard(cardKey);
-    }
-  };
-
   return (
-    <div className={`card p-5 ${player.isEliminated ? 'opacity-50' : ''}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <UserIcon className="w-8 h-8 text-gray-500" />
+    <div className="glass" style={{ padding: '20px', borderRadius: '16px', opacity: player.isEliminated ? 0.5 : 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <UserIcon style={{ width: '32px', height: '32px', color: '#888' }} />
           <div>
-            <div className="text-white font-bold">
+            <div style={{ fontSize: '18px', fontWeight: 700, color: player.isEliminated ? '#888' : '#fff' }}>
               {player.name}
-              {isMe && <span className="text-yellow-500 ml-2">(вы)</span>}
-              {player.isEliminated && <span className="text-red-500 ml-2">(исключён)</span>}
+              {player.isEliminated && <span style={{ color: '#e74c3c', marginLeft: '10px', fontSize: '14px' }}>(Исключён)</span>}
             </div>
-            <div className="text-gray-500 text-sm">
-              Открыто: {revealedCount}/8
+            <div style={{ fontSize: '13px', color: '#666' }}>
+              Открыто: {revealedCount}/8 карт
             </div>
           </div>
         </div>
-        
+
         {isHost && !player.isHost && (
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => reassignCards(player.id)}
-              className="p-2 border border-gray-700 hover:border-yellow-500 rounded"
+              className="btn btn-primary"
+              style={{ padding: '10px 14px' }}
               title="Новые карты"
             >
-              <DiceIcon className="w-5 h-5 text-gray-500 hover:text-yellow-500" />
+              <DiceIcon style={{ width: '18px', height: '18px' }} />
             </button>
             {!player.isEliminated ? (
               <button
                 onClick={() => eliminatePlayer(player.id)}
-                className="p-2 border border-gray-700 hover:border-red-500 rounded"
+                className="btn btn-primary"
+                style={{ padding: '10px 14px', borderColor: 'rgba(231, 76, 60, 0.3)' }}
                 title="Исключить"
               >
-                <CrossIcon className="w-5 h-5 text-gray-500 hover:text-red-500" />
+                <CrossIcon style={{ width: '18px', height: '18px', color: '#e74c3c' }} />
               </button>
             ) : (
               <button
                 onClick={() => restorePlayer(player.id)}
-                className="p-2 border border-gray-700 hover:border-green-500 rounded"
+                className="btn btn-primary"
+                style={{ padding: '10px 14px', borderColor: 'rgba(46, 204, 113, 0.3)' }}
                 title="Вернуть"
               >
-                <CheckIcon className="w-5 h-5 text-gray-500 hover:text-green-500" />
+                <CheckIcon style={{ width: '18px', height: '18px', color: '#2ecc71' }} />
               </button>
             )}
           </div>
         )}
       </div>
 
-      {/* Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px' }}>
         {CARD_ORDER.map((cardKey) => {
           const card = (cards as PlayerCards)[cardKey];
-          const canReveal = !card.revealed && (isHost || isMe) && !player.isEliminated;
+          const canRevealAsHost = !card.revealed && isHost && !player.isEliminated;
 
           return (
             <button
               key={cardKey}
-              onClick={() => canReveal && handleRevealCard(cardKey)}
-              disabled={!canReveal && !card.revealed}
-              className={`p-3 rounded-lg border text-left transition-all ${
-                card.revealed
-                  ? 'card-revealed border-green-800 cursor-default'
-                  : canReveal
-                    ? 'border-gray-700 hover:border-yellow-500 cursor-pointer'
-                    : 'border-gray-900 cursor-default'
-              }`}
+              onClick={() => canRevealAsHost && revealCard(player.id, cardKey)}
+              disabled={!canRevealAsHost && !card.revealed}
+              className={card.revealed ? 'card-gold' : 'card'}
+              style={{
+                padding: '14px',
+                borderRadius: '10px',
+                minHeight: '90px',
+                textAlign: 'left',
+                cursor: canRevealAsHost ? 'pointer' : 'default',
+                transition: 'all 0.2s'
+              }}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <CardIcon className="w-4 h-4 text-gray-600" />
-                <div className="text-xs text-gray-500">{card.label}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                <CardIcon style={{ width: '14px', height: '14px', color: '#666' }} />
+                <div style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase' }}>
+                  {card.label}
+                </div>
               </div>
+
               {card.revealed && card.value ? (
-                <div className="text-sm text-white font-medium">{card.value}</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff', lineHeight: '1.2' }}>
+                  {card.value}
+                </div>
               ) : (
-                <div className="text-sm text-gray-700">
-                  {canReveal ? 'Нажмите чтобы открыть' : '???'}
+                <div style={{ fontSize: '13px', color: '#555' }}>
+                  {canRevealAsHost ? 'Раскрыть (ведущий)' : '???'}
                 </div>
               )}
             </button>
@@ -150,16 +197,14 @@ function PlayerCard({ player, isMe, isHost }: { player: Player; isMe: boolean; i
         })}
       </div>
 
-      {/* Actions */}
       {isHost && !player.isEliminated && (
-        <div className="mt-4">
-          <button
-            onClick={() => revealAllCards(player.id)}
-            className="w-full btn-primary text-sm py-2"
-          >
-            Открыть все карты
-          </button>
-        </div>
+        <button
+          onClick={() => revealAllCards(player.id)}
+          className="btn btn-primary"
+          style={{ width: '100%', marginTop: '15px', fontSize: '14px', padding: '12px' }}
+        >
+          Раскрыть все карты
+        </button>
       )}
     </div>
   );
@@ -170,57 +215,58 @@ export default function GameScreen() {
 
   if (!room) return null;
 
-  const activePlayers = room.players.filter(p => !p.isEliminated);
-  const eliminatedPlayers = room.players.filter(p => p.isEliminated);
   const myPlayer = room.players.find(p => p.id === myPlayerId);
+  const otherPlayers = room.players.filter(p => p.id !== myPlayerId && !p.isEliminated);
+  const eliminatedPlayers = room.players.filter(p => p.isEliminated && p.id !== myPlayerId);
 
   return (
-    <div className="space-y-4">
-      {/* Timer */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <Timer timerEndAt={room.timerEndAt} timerDuration={room.timerDuration} />
 
-      {/* Game Info */}
-      <div className="card p-4">
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-gray-400">
-            Раунд: <span className="text-yellow-500 font-bold">{room.round}</span>
+      <div className="glass" style={{ padding: '18px', borderRadius: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '14px' }}>
+          <div style={{ color: '#aaa' }}>
+            Раунд: <span style={{ color: '#d4af37', fontWeight: 700, fontSize: '16px' }}>{room.round}</span>
           </div>
-          <div className="text-gray-400">
-            Выживших: <span className="text-white font-bold">{activePlayers.length}</span> / 
-            Мест в бункере: <span className="text-yellow-500 font-bold">{room.settings.bunkerCapacity}</span>
+          <div style={{ color: '#aaa' }}>
+            Выживших: <span style={{ color: '#fff', fontWeight: 700 }}>{room.players.filter(p => !p.isEliminated).length}</span>
+            {' / '}
+            Мест в бункере: <span style={{ color: '#d4af37', fontWeight: 700 }}>{room.settings.bunkerCapacity}</span>
           </div>
         </div>
       </div>
 
-      {/* My Cards (if not host) */}
-      {!isHost && myPlayer && (
+      {!isHost && myPlayer && <MyCards player={myPlayer} />}
+
+      {isHost && myPlayer && (
         <div>
-          <div className="text-white font-bold mb-3">Ваши характеристики</div>
-          <PlayerCard player={myPlayer} isMe={true} isHost={false} />
+          <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: '#fff' }}>
+            Ваши характеристики (видны только вам)
+          </h3>
+          <MyCards player={myPlayer} />
         </div>
       )}
 
-      {/* Active Players */}
       <div>
-        <div className="text-white font-bold mb-3">
-          Выжившие ({activePlayers.length})
-        </div>
-        <div className="space-y-3">
-          {activePlayers.filter(p => isHost || p.id !== myPlayerId).map((player) => (
-            <PlayerCard key={player.id} player={player} isMe={player.id === myPlayerId} isHost={isHost} />
+        <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '15px', color: '#fff' }}>
+          {isHost ? `Все игроки (${otherPlayers.length + 1})` : `Другие игроки (${otherPlayers.length})`}
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          {isHost && myPlayer && <OtherPlayerCard player={myPlayer} isHost={true} />}
+          {otherPlayers.map((player) => (
+            <OtherPlayerCard key={player.id} player={player} isHost={isHost} />
           ))}
         </div>
       </div>
 
-      {/* Eliminated */}
       {eliminatedPlayers.length > 0 && (
         <div>
-          <div className="text-gray-500 font-bold mb-3">
+          <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: '#888' }}>
             Исключены ({eliminatedPlayers.length})
-          </div>
-          <div className="space-y-3">
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {eliminatedPlayers.map((player) => (
-              <PlayerCard key={player.id} player={player} isMe={player.id === myPlayerId} isHost={isHost} />
+              <OtherPlayerCard key={player.id} player={player} isHost={isHost} />
             ))}
           </div>
         </div>
