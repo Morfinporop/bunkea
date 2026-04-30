@@ -311,9 +311,11 @@ io.on('connection', (socket) => {
       // Random catastrophe
       const catastrophe = pick(CATASTROPHES);
       
-      // Random settings
-      const maxPlayers = pick([6, 8, 10, 12]);
-      const bunkerCapacity = pick([Math.floor(maxPlayers / 2), Math.floor(maxPlayers / 3), Math.ceil(maxPlayers / 2.5)]);
+      // Validate maxPlayers (minimum 4)
+      const maxPlayers = Math.max(4, settings?.maxPlayers || pick([6, 8, 10, 12]));
+      
+      // Calculate bunker capacity (30-50% of max players, minimum 2)
+      const bunkerCapacity = Math.max(2, Math.floor(maxPlayers * (0.3 + Math.random() * 0.2)));
 
       const roomSettings = {
         maxPlayers,

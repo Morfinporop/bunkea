@@ -37,6 +37,7 @@ export interface Catastrophe {
   duration: string;
   threat: string;
   bunkerCapacity: string;
+  image?: string;
 }
 
 export interface RoomSettings {

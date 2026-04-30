@@ -1,7 +1,3 @@
-/**
- * Game Page - Main game screen
- * Shows different views based on game phase
- */
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../GameContext';
@@ -42,50 +38,63 @@ export default function GamePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="min-h-screen relative">
       {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-green-500/3 rounded-full blur-3xl" />
-        <div className="absolute inset-0 opacity-4"
-          style={{ backgroundImage: 'linear-gradient(#00ff4420 1px, transparent 1px), linear-gradient(90deg, #00ff4420 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+      <div className="fixed inset-0 z-0">
+        <img src="/bunker-bg.jpg" alt="" className="w-full h-full object-cover opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-6">
-        {/* Phase indicator */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-green-500/70 text-xs font-mono tracking-widest uppercase">
-              {room.phase === 'catastrophe' && 'Катастрофа'}
-              {room.phase === 'game' && `Раунд ${room.round}`}
-              {room.phase === 'voting' && 'Голосование'}
-              {room.phase === 'results' && 'Итоги'}
-            </span>
-            {room.phase === 'game' && (
-              <span className="text-gray-600 text-xs font-mono">
-                Выживших: {room.players.filter(p => !p.isEliminated).length} / Бункер: {room.settings.bunkerCapacity}
-              </span>
-            )}
-          </div>
-          <div className="text-gray-600 text-xs font-mono">#{room.code}</div>
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-          {/* Main content */}
-          <div className={isHost ? 'xl:col-span-2' : 'xl:col-span-3'}>
-            {renderPhase()}
-          </div>
-
-          {/* Host panel */}
-          {isHost && (
-            <div className="xl:col-span-1">
-              <HostPanel />
+      {/* Content */}
+      <div className="relative z-10 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          {/* Header */}
+          <div className="mb-6 glass rounded-xl p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-gray-500">
+                  Код: <span className="text-yellow-500 font-bold">{room.code}</span>
+                </div>
+                <div className="h-4 w-px bg-gray-800"></div>
+                <div className="text-sm text-gray-500">
+                  Фаза: <span className="text-white font-bold capitalize">
+                    {room.phase === 'catastrophe' ? 'Катастрофа' :
+                     room.phase === 'game' ? `Раунд ${room.round}` :
+                     room.phase === 'voting' ? 'Голосование' : 'Итоги'}
+                  </span>
+                </div>
+              </div>
+              <div className="text-sm text-gray-500">
+                Выживших: <span className="text-white font-bold">{room.players.filter(p => !p.isEliminated).length}</span> / 
+                Мест: <span className="text-yellow-500 font-bold">{room.settings.bunkerCapacity}</span>
+              </div>
             </div>
-          )}
+          </div>
 
-          {/* Chat */}
-          <div className="xl:col-span-1">
-            <ChatPanel />
+          {/* Main Content - Vertical scroll */}
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            {/* Left: Host Panel (if host) */}
+            {isHost && (
+              <div className="xl:col-span-3">
+                <div className="xl:sticky xl:top-6">
+                  <HostPanel />
+                </div>
+              </div>
+            )}
+
+            {/* Center: Main Game */}
+            <div className={isHost ? 'xl:col-span-6' : 'xl:col-span-9'}>
+              <div className="space-y-6">
+                {renderPhase()}
+              </div>
+            </div>
+
+            {/* Right: Chat */}
+            <div className="xl:col-span-3">
+              <div className="xl:sticky xl:top-6">
+                <ChatPanel />
+              </div>
+            </div>
           </div>
         </div>
       </div>

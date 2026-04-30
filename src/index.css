@@ -1,33 +1,29 @@
 @import "tailwindcss";
 
-/* ============================================================
-   BUNKER ONLINE - Clean & Simple Styles
-   ============================================================ */
-
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+html, body {
+  height: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  background: #000;
   color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #0a0a0a;
 }
 ::-webkit-scrollbar-thumb {
   background: #333;
@@ -37,177 +33,163 @@ body {
   background: #444;
 }
 
-/* ============================================================
-   GLASS PANEL
-   ============================================================ */
-.glass-panel {
-  background: rgba(20, 20, 20, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+/* Glass effect */
+.glass {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-.btn-primary {
-  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-  border: 1px solid #333;
-  color: #fff;
-  font-weight: 600;
-  padding: 12px 24px;
+/* Buttons */
+.btn {
+  padding: 14px 32px;
   border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(135deg, #333, #222);
+.btn-primary {
+  background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
   border-color: #444;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-.btn-primary:active {
-  transform: translateY(0);
+.btn-accent {
+  background: linear-gradient(135deg, #d4af37, #aa8c2e);
+  color: #000;
+  font-weight: 700;
+  border: none;
 }
 
-.btn-primary:disabled {
-  opacity: 0.5;
+.btn-accent:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e5c24a, #d4af37);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
   transform: none !important;
 }
 
-.btn-accent {
-  background: linear-gradient(135deg, #d4af37, #c19a2e);
-  border: 1px solid #b8941f;
-  color: #000;
-  font-weight: 700;
-  padding: 14px 28px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-accent:hover {
-  background: linear-gradient(135deg, #e5c158, #d4af37);
-  transform: translateY(-1px);
-}
-
-.btn-accent:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* ============================================================
-   INPUTS
-   ============================================================ */
-.input-field {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 6px;
-  outline: none;
-  transition: all 0.2s ease;
+/* Input */
+.input {
   width: 100%;
-  font-size: 14px;
+  padding: 14px 18px;
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
 }
 
-.input-field:hover {
-  border-color: #444;
-}
-
-.input-field:focus {
+.input:focus {
   border-color: #666;
-  background: #222;
+  background: rgba(30, 30, 30, 0.9);
 }
 
-.input-field::placeholder {
+.input::placeholder {
   color: #666;
 }
 
-select.input-field {
+select.input {
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23666' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
 }
 
-select.input-field option {
+select.input option {
   background: #1a1a1a;
-  color: #fff;
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-/* ============================================================
-   BLUR OVERLAY
-   ============================================================ */
-.blur-overlay {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: rgba(0, 0, 0, 0.85);
-}
-
-/* ============================================================
-   CARD STYLES
-   ============================================================ */
+/* Card */
 .card {
-  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-  border: 1px solid #333;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  background: rgba(20, 20, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-  border-color: #444;
-  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
-.card-revealed {
-  background: linear-gradient(135deg, #2a3a2a, #1a2a1a);
-  border-color: #3a4a3a;
+.card-gold {
+  background: rgba(40, 35, 20, 0.6);
+  border-color: rgba(212, 175, 55, 0.2);
 }
 
-.card-accent {
-  background: linear-gradient(135deg, #3a3020, #2a2010);
-  border-color: #4a4030;
+.card-gold:hover {
+  border-color: rgba(212, 175, 55, 0.4);
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 768px) {
-  .btn-primary, .btn-accent {
-    padding: 10px 20px;
-    font-size: 14px;
+/* Blur overlay */
+.overlay-blur {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .input-field {
-    padding: 10px 14px;
-    font-size: 14px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ============================================================
-   SELECTION
-   ============================================================ */
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Smooth scroll */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Selection */
 ::selection {
-  background: #d4af37;
-  color: #000;
+  background: rgba(212, 175, 55, 0.3);
+  color: #fff;
 }
