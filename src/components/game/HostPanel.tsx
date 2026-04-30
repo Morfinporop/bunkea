@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGame } from '../../GameContext';
-import { SettingsIcon, TimerIcon, PlayIcon, PauseIcon } from '../Icons';
+import { SettingsIcon, PlayIcon, PauseIcon } from '../Icons';
 
 export default function HostPanel() {
   const { room, startTimer, stopTimer, startVoting, setPhase, nextRound } = useGame();
@@ -9,48 +9,61 @@ export default function HostPanel() {
   if (!room) return null;
 
   return (
-    <div className="card p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <SettingsIcon className="w-5 h-5 text-yellow-500" />
-        <div className="text-white font-bold">Панель ведущего</div>
+    <div className="glass" style={{ padding: '24px', borderRadius: '16px', position: 'sticky', top: '24px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+        <SettingsIcon style={{ width: '20px', height: '20px', color: '#d4af37' }} />
+        <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Панель ведущего</div>
       </div>
 
-      <div className="space-y-3">
-        <div className="bg-gray-900/50 border border-gray-800 rounded p-3 text-center">
-          <div className="text-gray-500 text-xs mb-1">Текущая фаза</div>
-          <div className="text-white font-bold capitalize">{room.phase}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="glass-light" style={{ padding: '16px', borderRadius: '10px', textAlign: 'center' }}>
+          <div style={{ fontSize: '12px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>
+            Текущая фаза
+          </div>
+          <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+            {room.phase === 'catastrophe' ? 'Катастрофа' :
+             room.phase === 'game' ? `Раунд ${room.round}` :
+             room.phase === 'voting' ? 'Голосование' : 'Итоги'}
+          </div>
         </div>
 
         <div>
-          <div className="text-gray-400 text-xs mb-2">Таймер:</div>
-          <div className="grid grid-cols-4 gap-2 mb-2">
+          <div style={{ fontSize: '13px', color: '#888', marginBottom: '10px' }}>Таймер:</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginBottom: '10px' }}>
             {[15, 30, 60, 120].map(t => (
               <button
                 key={t}
                 onClick={() => setCustomTimer(t)}
-                className={`py-2 text-xs rounded border transition ${
-                  customTimer === t ? 'border-yellow-500 bg-yellow-500/10' : 'border-gray-800'
-                }`}
+                className={customTimer === t ? 'card-gold' : 'card'}
+                style={{ padding: '10px 0', fontSize: '13px', fontWeight: 600, textAlign: 'center', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s' }}
               >
                 {t}с
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => startTimer(customTimer)} className="btn-primary py-2 text-xs flex items-center justify-center gap-1">
-              <PlayIcon className="w-3 h-3" /> Старт
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <button onClick={() => startTimer(customTimer)} className="btn btn-primary" style={{ padding: '10px', fontSize: '13px' }}>
+              <PlayIcon style={{ width: '14px', height: '14px' }} /> Старт
             </button>
-            <button onClick={stopTimer} className="btn-primary py-2 text-xs flex items-center justify-center gap-1">
-              <PauseIcon className="w-3 h-3" /> Стоп
+            <button onClick={stopTimer} className="btn btn-primary" style={{ padding: '10px', fontSize: '13px' }}>
+              <PauseIcon style={{ width: '14px', height: '14px' }} /> Стоп
             </button>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-3 space-y-2">
-          <button onClick={() => setPhase('catastrophe')} className="w-full btn-primary py-2 text-sm">Катастрофа</button>
-          <button onClick={() => setPhase('game')} className="w-full btn-primary py-2 text-sm">Игра</button>
-          <button onClick={() => nextRound()} className="w-full btn-primary py-2 text-sm">След. раунд</button>
-          <button onClick={() => startVoting()} className="w-full btn-accent py-2 text-sm">Голосование</button>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <button onClick={() => setPhase('catastrophe')} className="btn btn-primary" style={{ padding: '12px', fontSize: '14px' }}>
+            Катастрофа
+          </button>
+          <button onClick={() => setPhase('game')} className="btn btn-primary" style={{ padding: '12px', fontSize: '14px' }}>
+            Игра
+          </button>
+          <button onClick={() => nextRound()} className="btn btn-primary" style={{ padding: '12px', fontSize: '14px' }}>
+            След. раунд
+          </button>
+          <button onClick={() => startVoting()} className="btn btn-accent" style={{ padding: '12px', fontSize: '14px' }}>
+            Голосование
+          </button>
         </div>
       </div>
     </div>
