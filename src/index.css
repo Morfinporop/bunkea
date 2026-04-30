@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+/* ============================================================
+   BUNKER ONLINE - Clean & Simple Styles
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* ============================================================
+   GLASS PANEL
+   ============================================================ */
+.glass-panel {
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+  border: 1px solid #333;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #333, #222);
+  border-color: #444;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, #d4af37, #c19a2e);
+  border: 1px solid #b8941f;
+  color: #000;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-accent:hover {
+  background: linear-gradient(135deg, #e5c158, #d4af37);
+  transform: translateY(-1px);
+}
+
+.btn-accent:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+.input-field {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  font-size: 14px;
+}
+
+.input-field:hover {
+  border-color: #444;
+}
+
+.input-field:focus {
+  border-color: #666;
+  background: #222;
+}
+
+.input-field::placeholder {
+  color: #666;
+}
+
+select.input-field {
+  cursor: pointer;
+}
+
+select.input-field option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* ============================================================
+   BLUR OVERLAY
+   ============================================================ */
+.blur-overlay {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* ============================================================
+   CARD STYLES
+   ============================================================ */
+.card {
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+  border: 1px solid #333;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: #444;
+  transform: translateY(-2px);
+}
+
+.card-revealed {
+  background: linear-gradient(135deg, #2a3a2a, #1a2a1a);
+  border-color: #3a4a3a;
+}
+
+.card-accent {
+  background: linear-gradient(135deg, #3a3020, #2a2010);
+  border-color: #4a4030;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .btn-primary, .btn-accent {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .input-field {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: #d4af37;
+  color: #000;
+}
